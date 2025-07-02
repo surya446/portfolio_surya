@@ -1335,6 +1335,41 @@
           }
         }
         
+        @media (max-width: 768px) {
+          .hero-content, .section-title, .about-content, .skills-grid, .projects-grid, .cta-buttons {
+            text-align: center !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+            align-items: center !important;
+            justify-content: center !important;
+          }
+          .btn, .btn-secondary {
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .hero-content, .section-title, .about-content, .skills-grid, .projects-grid, .cta-buttons {
+            text-align: center !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+            align-items: center !important;
+            justify-content: center !important;
+          }
+          .btn, .btn-secondary {
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+          }
+          /* Fix double SURYA.EXE glitch effect on mobile */
+          .glitch-text::before,
+          .glitch-text::after {
+            display: none !important;
+          }
+        }
+        
     </style>
 </head>
 <body>
