@@ -1336,17 +1336,19 @@
         }
         
         @media (max-width: 768px) {
-          .hero-content, .section-title, .about-content, .skills-grid, .projects-grid, .cta-buttons {
-            text-align: center !important;
+          .hero-content, .section-title, .about-content, .skills-grid, .projects-grid, .cta-buttons, .container {
+            max-width: 95vw !important;
             margin-left: auto !important;
             margin-right: auto !important;
-            align-items: center !important;
-            justify-content: center !important;
+            text-align: center !important;
+          }
+          .section-title, .cta-buttons {
+            margin-bottom: 1.2rem !important;
           }
           .btn, .btn-secondary {
-            margin-left: auto;
-            margin-right: auto;
-            display: block;
+            margin: 0.7rem auto !important;
+            display: block !important;
+            float: none !important;
           }
         }
 
