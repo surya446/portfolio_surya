@@ -1927,7 +1927,7 @@ document.querySelectorAll('.section, .scroll-animate').forEach(element => {
       message: this.message.value
     };
 
-    const response = await fetch('http://localhost:5000/contact', {
+    const response = await fetch('https://your-app.onrender.com/api/endpoint', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData)
