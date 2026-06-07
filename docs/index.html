@@ -1411,7 +1411,9 @@ border: 2px solid rgba(0, 229, 255, 0.7);
             top: 60px;
             left: 0;
             width: 100%;
-            display: none;
+                display: none;
+                align-items: center; /* center nav headings horizontally on mobile */
+                text-align: center;
           }
           .nav-links.active {
             display: flex;
@@ -1517,6 +1519,10 @@ border: 2px solid rgba(0, 229, 255, 0.7);
           .nav-links {
             font-size: 1rem;
             padding: 0.5rem 0;
+                        align-items: center;
+                        text-align: center;
+                    }
+                    .nav-links a { display: block; width: 100%; padding: 0.75rem 0; }
           }
         }
 
