@@ -501,17 +501,25 @@
 
         .mobile-menu {
             display: none;
-            flex-direction: column;
+            width: 28px;
+            height: 22px;
+            position: relative;
             cursor: pointer;
         }
 
         .mobile-menu span {
-            width: 25px;
+            position: absolute;
+            left: 0;
+            right: 0;
             height: 3px;
             background: var(--text-primary);
-            margin: 3px 0;
-            transition: 0.3s;
+            transition: transform 0.28s ease, opacity 0.2s ease, top 0.28s ease;
+            transform-origin: center;
+            border-radius: 2px;
         }
+        .mobile-menu span:nth-child(1) { top: calc(50% - 7px); }
+        .mobile-menu span:nth-child(2) { top: 50%; transform: translateY(-50%); }
+        .mobile-menu span:nth-child(3) { top: calc(50% + 7px); }
 
         /* ===== HERO SECTION ===== */
         .hero {
@@ -718,6 +726,7 @@ border: 2px solid rgba(0, 229, 255, 0.7);
             text-shadow: 0 0 15px var(--accent-green);
             text-transform: uppercase;
             letter-spacing: 3px;
+            transition: opacity 0.28s ease, transform 0.28s ease, background 0.2s;
         }
 
         /* ===== ABOUT SECTION ===== */
@@ -1424,6 +1433,19 @@ border: 2px solid rgba(0, 229, 255, 0.7);
           .mobile-menu {
             display: flex;
           }
+                    /* transform three lines into a perfectly centered X when active */
+                    .mobile-menu.active span:nth-child(1) {
+                        top: 50%;
+                        transform: translateY(-50%) rotate(45deg);
+                    }
+                    .mobile-menu.active span:nth-child(2) {
+                        opacity: 0;
+                        transform: translateY(-50%) scaleX(0.2);
+                    }
+                    .mobile-menu.active span:nth-child(3) {
+                        top: 50%;
+                        transform: translateY(-50%) rotate(-45deg);
+                    }
           .hero h1 {
             font-size: 2rem;
           }
@@ -2960,11 +2982,33 @@ document.querySelectorAll('.section, .scroll-animate').forEach(element => {
         
         const mobileMenu = document.querySelector('.mobile-menu');
         const navLinks = document.querySelector('.nav-links');
-        
-        mobileMenu.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-            mobileMenu.classList.toggle('active');
-        });
+
+        if (mobileMenu && navLinks) {
+            mobileMenu.addEventListener('click', (e) => {
+                navLinks.classList.toggle('active');
+                mobileMenu.classList.toggle('active');
+            });
+
+            // Close menu when tapping outside the nav area on mobile
+            document.addEventListener('click', (e) => {
+                if (window.innerWidth <= 768 && navLinks.classList.contains('active')) {
+                    if (!navLinks.contains(e.target) && !mobileMenu.contains(e.target)) {
+                        navLinks.classList.remove('active');
+                        mobileMenu.classList.remove('active');
+                    }
+                }
+
+                // (previous sticky attempt removed; using scroll-driven sticky handler below)
+            });
+
+            // Allow Escape key to close the mobile nav
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && navLinks.classList.contains('active')) {
+                    navLinks.classList.remove('active');
+                    mobileMenu.classList.remove('active');
+                }
+            });
+        }
         // ===== 3D TILT EFFECT FOR PROJECT CARDS =====
         
         document.querySelectorAll('.tilt-card').forEach(card => {
@@ -3012,6 +3056,98 @@ document.querySelectorAll('.section, .scroll-animate').forEach(element => {
                 typeWriter(tagline, originalText, 50);
             }
         });
+
+        // ===== MOBILE: Sticky Featured Projects Heading (scroll-driven) =====
+        (function setupProjectsSticky(){
+            const title = document.querySelector('#projects .section-title');
+            const section = document.querySelector('#projects');
+            const navbarEl = document.querySelector('.navbar');
+            if (!title || !section) return;
+
+            let ticking = false;
+            function update() {
+                const navH = (navbarEl && navbarEl.offsetHeight) ? navbarEl.offsetHeight : 0;
+                const secRect = section.getBoundingClientRect();
+                const titleH = title.offsetHeight || 0;
+                // only apply on small screens
+                if (window.innerWidth <= 768 && secRect.top <= navH + titleH) {
+                    // fix title to viewport
+                    title.style.position = 'fixed';
+                    title.style.top = navH + 'px';
+                    // align width to container
+                    const cont = section.querySelector('.container');
+                    if (cont) {
+                        const cr = cont.getBoundingClientRect();
+                        title.style.left = cr.left + 'px';
+                        title.style.width = cr.width + 'px';
+                    } else {
+                        title.style.left = '0px';
+                        title.style.width = '100%';
+                    }
+                    title.style.zIndex = '900';
+                    // slightly brighter black (dark grey) so it reads as part of the nav
+                    title.style.background = 'rgba(30,30,30,0.98)';
+                    title.style.paddingTop = '0.35rem';
+                    title.style.paddingBottom = '0.35rem';
+                    title.style.marginTop = '0';
+                    title.style.boxSizing = 'border-box';
+                    // Fade out smoothly as the Blog section starts to enter the viewport
+                    const fadeRange = Math.max(80, titleH * 1.2); // px over which to fade when blog enters
+                    const blog = document.querySelector('#blog');
+                    let raw = 1;
+                    if (blog) {
+                        const blogRect = blog.getBoundingClientRect();
+                        // overlap = how many pixels of the blog are visible from bottom
+                        const overlap = Math.max(0, window.innerHeight - blogRect.top);
+                        // when overlap is 0 -> blog not visible -> raw = 1 (fully visible)
+                        // as overlap grows from 0 -> fadeRange, reduce raw to 0
+                        raw = Math.max(0, 1 - (overlap / fadeRange));
+                    } else {
+                        // fallback: if no blog section, keep fully visible
+                        raw = 1;
+                    }
+                    // apply opacity and slight upward translate for disappearing effect
+                    title.style.opacity = String(raw);
+                    const translateY = (1 - raw) * -6; // small upward shift as it fades
+                    title.style.transform = `translateY(${translateY}px)`;
+                    // fully hide when faded out so it doesn't reappear in normal flow
+                    if (raw <= 0) {
+                        title.style.visibility = 'hidden';
+                    } else {
+                        title.style.visibility = 'visible';
+                    }
+                } else {
+                    // reset to natural flow
+                    title.style.position = '';
+                    title.style.top = '';
+                    title.style.left = '';
+                    title.style.width = '';
+                    title.style.zIndex = '';
+                    title.style.background = '';
+                    title.style.paddingTop = '';
+                    title.style.paddingBottom = '';
+                    title.style.marginTop = '';
+                    title.style.opacity = '';
+                    title.style.transform = '';
+                    title.style.visibility = '';
+                }
+                ticking = false;
+            }
+
+            function onScroll() {
+                if (!ticking) {
+                    requestAnimationFrame(update);
+                    ticking = true;
+                }
+            }
+
+            window.addEventListener('scroll', onScroll, { passive: true });
+            window.addEventListener('resize', update);
+            window.addEventListener('orientationchange', update);
+            window.addEventListener('load', update);
+            // initial check
+            update();
+        })();
 
         // ===== ACTIVE NAVIGATION HIGHLIGHT =====
         
