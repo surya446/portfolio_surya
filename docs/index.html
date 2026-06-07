@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SURYA.EXE - FULL_STACK_DEVELOPER.SYS</title>
+    <title>SURYA - FULL_STACK_DEVELOPER.SYS</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Orbitron:wght@400;500;600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -50,6 +50,14 @@
             overflow-x: hidden;
             letter-spacing: 0.5px;
             position: relative;
+            /* Scale entire page down to 90% for a zoomed-out appearance */
+            zoom: 0.9; /* Works in Chrome, Edge, IE */
+            -moz-transform: scale(0.9); /* Firefox fallback */
+            -moz-transform-origin: 0 0;
+            transform-origin: 0 0;
+            /* Use custom SVG cursor (hotspot 4 4). Falls back to default when unavailable. */
+            /* Use path relative to this file so opening docs/index.html directly works */
+            cursor: url('../public/cursor-pointer.svg') 4 4, auto;
             
         }
 
@@ -365,10 +373,39 @@
             font-family: 'Orbitron', monospace;
             font-size: 1.5rem;
             font-weight: 800;
-            color: var(--accent-green);
-            text-shadow: 0 0 10px var(--accent-green);
             text-transform: uppercase;
             letter-spacing: 2px;
+            /* animated multi-color gradient text */
+            background: linear-gradient(90deg,
+                var(--accent-green),
+                var(--accent-cyan),
+                var(--accent-blue),
+                var(--accent-purple),
+                var(--accent-green)
+            );
+            background-size: 400% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            animation: logoGradientShift 8s linear infinite;
+            /* slight white glow plus colored halo for subtle shine */
+            text-shadow: 0 0 6px rgba(255,255,255,0.08),
+                         0 0 12px rgba(255,255,255,0.04);
+        }
+
+        @keyframes logoGradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* On hover, show a bright white glow and solid white text */
+        .logo:hover {
+            -webkit-text-fill-color: #ffffff; /* force white text for clipped background */
+            color: #ffffff;
+            animation-play-state: paused; /* pause gradient shift while hovered */
+            text-shadow: 0 0 10px rgba(255,255,255,0.95), 0 0 20px rgba(255,255,255,0.6);
         }
 
         .nav-links {
@@ -480,9 +517,22 @@
             flex-wrap: wrap;
         }
 
+        /* Prevent SURYA heading from being cut by the fixed navbar and extend home background */
+        #home {
+            padding-top: 6rem; /* space for navbar so the large heading is fully visible */
+            padding-bottom: 10rem; /* increase bottom space under home background */
+        }
+
+        @media (max-width: 768px) {
+            #home {
+                padding-top: 3rem; /* smaller top padding on mobile */
+                padding-bottom: 6rem; /* smaller devices need less extra space */
+            }
+        }
+
         .btn {
             padding: 1rem 2rem;
-            border: 2px solid var(--accent-green);
+border: 2px solid rgba(0, 229, 255, 0.7);
             border-radius: 0;
             font-family: 'JetBrains Mono', monospace;
             font-weight: 600;
@@ -501,6 +551,11 @@
             overflow: hidden;
         }
 
+        /* Ensure interactive elements show the custom cursor and pointer fallback */
+        a, button, .btn, .btn-secondary {
+            cursor: url('../public/cursor-pointer.svg') 2 2, pointer;
+        }
+
         .btn::before {
             content: '';
             position: absolute;
@@ -508,7 +563,12 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: var(--accent-green);
+            background: linear-gradient(
+                                        90deg,
+                                        #00ff41,
+                                        #00e5ff,
+                                        #4022e9
+                                    );
             transition: left 0.3s ease;
             z-index: -1;
         }
@@ -519,13 +579,14 @@
 
         .btn:hover {
             color: black;
-            background-color: var(--accent-green);
+            background-color: var(--accent-green); /* project button hover -> green */
             text-shadow: none;
             box-shadow: 0 0 20px var(--accent-green);
         }
 
+
         .btn-secondary {
-            border-color: var(--accent-cyan);
+            border-color: var(--accent-green);
             color: var(--accent-cyan);
         }
 
@@ -534,6 +595,9 @@
         }
 
         .btn-secondary:hover {
+            color: black;
+            background-color: var(--accent-cyan); /* connect button hover -> cyan */
+            text-shadow: none;
             box-shadow: 0 0 20px var(--accent-cyan);
         }
        /* ===== SCROLL ANIMATIONS ===== */
@@ -605,6 +669,17 @@
             background: var(--secondary-bg);
         }
 
+        /* Prevent ABOUT heading from touching the fixed navbar */
+        #about {
+            padding-top: 6rem; /* add space so large heading is fully visible */
+        }
+
+        @media (max-width: 768px) {
+            #about {
+                padding-top: 3rem; /* smaller top padding on mobile */
+            }
+        }
+
         .about-content {
             max-width: 800px;
             margin: 0 auto;
@@ -634,6 +709,17 @@
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
             margin-top: 3rem;
+        }
+
+        /* Extend skills section background so next section header doesn't peek through */
+        #skills {
+            padding-bottom: 10rem; /* increase bottom space under skills background */
+        }
+
+        @media (max-width: 768px) {
+            #skills {
+                padding-bottom: 6rem; /* smaller devices need less extra space */
+            }
         }
 
         .skill-category {
@@ -718,20 +804,35 @@
             box-shadow: inset 0 1px 0 var(--border-color);
         }
 
+        /* Ensure project cards are fully visible when navigating to #projects */
+        #projects {
+            padding-top: 3rem; /* restore previous spacing so title aligns as before */
+            padding-bottom: 8rem; /* keep extra bottom space so first-row cards don't get cut */
+            scroll-margin-top: 4rem; /* helps anchor scrolling land correctly */
+        }
+
+        @media (max-width: 768px) {
+            #projects {
+                padding-top: 2rem;
+                padding-bottom: 4rem;
+                scroll-margin-top: 2rem;
+            }
+        }
+
         .projects-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 3rem;
-            margin-top: 4rem;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); /* slightly smaller cards */
+            gap: 2.5rem;
+            margin-top: 3rem;
         }
 
         .project-card {
             background: var(--card-bg);
-            border-radius: 25px;
-            padding: 2.5rem;
+            border-radius: 20px;
+            padding: 1.75rem; /* reduced padding for slightly smaller card */
             border: 1px solid var(--border-color);
-            box-shadow: 0 15px 35px var(--shadow-light);
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 30px var(--shadow-light); /* lighter shadow */
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
             transform-style: preserve-3d;
@@ -760,10 +861,10 @@
 
         .project-title {
             font-family: 'Orbitron', monospace;
-            font-size: 1.5rem;
+            font-size: 1.35rem; /* slightly smaller title */
             font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.25rem;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
@@ -832,6 +933,17 @@
             margin-top: 3rem;
         }
 
+        /* Extend blog section background so next section header doesn't peek through */
+        #blog {
+            padding-bottom: 10rem; /* increase bottom space under blog background */
+        }
+
+        @media (max-width: 768px) {
+            #blog {
+                padding-bottom: 6rem; /* smaller devices need less extra space */
+            }
+        }
+
         .blog-card {
             background: var(--card-bg);
             padding: 2rem;
@@ -896,10 +1008,22 @@
             background: var(--secondary-bg);
         }
 
+        /* Reduce extra space below contact section so the form fits at bottom */
+        #contact {
+            padding-top: 1.25rem; /* bring heading up so it fits when scrolled to bottom */
+            padding-bottom: 0; /* remove extra bottom space */
+        }
+
+        /* Tighter heading spacing within contact */
+        #contact .section-title {
+            margin-bottom: 0.75rem;
+            font-size: clamp(1.6rem, 3vw, 2rem);
+        }
+
         .contact-content {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 4rem;
+            gap: 2rem; /* reduced gap to bring columns closer and shorten layout */
             align-items: start;
         }
 
@@ -933,34 +1057,37 @@
 
         .contact-form {
             background: var(--card-bg);
-            padding: 2rem;
+            padding: 1rem 1.25rem; /* reduced vertical padding to make form shorter */
             border: 1px solid var(--border-color);
+            box-sizing: border-box;
         }
 
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 0.8rem;
         }
 
         .form-group label {
             display: block;
             color: var(--accent-green);
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.3rem;
             font-family: 'JetBrains Mono', monospace;
             font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 1px;
+            font-size: 0.9rem;
         }
 
         .form-group input,
         .form-group textarea {
             width: 100%;
-            padding: 1rem;
+            padding: 0.5rem; /* reduced control padding */
             background: var(--secondary-bg);
             border: 1px solid var(--border-color);
             color: var(--text-primary);
             font-family: 'JetBrains Mono', monospace;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             letter-spacing: 0.5px;
+            font-size: 0.95rem;
         }
 
         .form-group input:focus,
@@ -972,7 +1099,8 @@
 
         .form-group textarea {
             resize: vertical;
-            min-height: 120px;
+            min-height: 80px; /* shorter message box */
+            max-height: 240px;
         }
 
         /* ===== FLOATING RESUME BUTTON ===== */
@@ -985,30 +1113,36 @@
         }
 
         .floating-resume .btn {
-            background: #7bff00e0;
+            background: linear-gradient(
+    135deg,
+    #00ff41,
+    #00e5ff,
+    #b727ff
+);
             color: rgb(0, 0, 0);
-            border: 2px solid var(--accent-green);
-            padding: 1rem 1.5rem;
+            padding: 0.72rem 1.12rem; /* slightly smaller */
             border-radius: 100px;
             text-decoration: none;
             font-family: 'JetBrains Mono', monospace;
             font-weight: 600;
-            box-shadow: 0 8px 25px rgba(0, 255, 65, 0.3);
-            transition: all 0.3s ease;
+            font-size: 0.95rem; /* reduce size a touch */
+            box-shadow: 0 6px 18px rgba(255, 255, 255, 0.26); /* lighter shadow */
+            transition: all 0.22s ease;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
         .floating-resume .btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0px 12px 35px rgb(0, 255, 0);
+            box-shadow: 0 12px 35px rgba(0, 229, 255, 0.35), 0 0 25px rgba(0, 229, 255, 0.25);
             color: #0a0a0a;
+           
             
         }
 
         @keyframes float {
             0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
+            50% { transform: translateY(-8px); }
         }
 
         /* ===== SOCIAL LINKS ===== */
@@ -1040,11 +1174,37 @@
             border-color: var(--accent-green);
         }
 
+        /* Brand hover colors for social icons */
+        .social-link svg {
+            transition: color 0.25s ease, fill 0.25s ease;
+        }
+
+        a.social-link[title="GITHUB_REPOSITORY"]:hover {
+            color: #ffffff; /* GitHub: make icon white on dark background for contrast */
+            border-color: #ffffff;
+            box-shadow: 0 10px 30px rgba(255,255,255,0.08);
+            background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+        }
+
+        a.social-link[title="LINKEDIN_PROFILE"]:hover {
+            color: #0A66C2; /* LinkedIn blue */
+            border-color: #0A66C2;
+            box-shadow: 0 10px 30px rgba(10,102,194,0.12);
+            background: linear-gradient(135deg, rgba(10,102,194,0.06), rgba(255,255,255,0.01));
+        }
+
+        a.social-link[title="LEETCODE_PROFILE"]:hover {
+            color: #FFA116; /* LeetCode orange */
+            border-color: #FFA116;
+            box-shadow: 0 10px 30px rgba(255,161,22,0.12);
+            background: linear-gradient(135deg, rgba(255,161,22,0.06), rgba(255,255,255,0.01));
+        }
+
         /* ===== FOOTER ===== */
         .footer {
             background: var(--primary-bg);
             text-align: center;
-            padding: 2rem 0;
+            padding: 1rem 0; /* reduced footer padding to tighten bottom */
             border-top: 1px solid var(--border-color);
         }
 
@@ -1446,15 +1606,15 @@
     <!-- Hero Section -->
     <section id="home" class="hero">
         <div class="hero-content">
-            <h1 class="glitch-text" data-text="SURYA.EXE">SURYA.EXE</h1>
-            <p class="tagline typewriter">ECE_STUDENT.BIN | FULL_STACK_DEVELOPER.SYS</p>
+            <h1 class="glitch-text" data-text="SURYA">SURYA</h1>
+            <p class="tagline typewriter">SOFTWARE_ENGINEER.SYS | PROBLEM_SOLVER.EXE</p>
             <p class="intro robotic-text">
-                <span class="terminal-text">INITIALIZING DEVELOPER MODE...</span><br><br>
-                FROM CODE TO INSIGHTS, FOCUSED ON BUILDING TECHNOLOGY THAT CREATES IMPACT. ECE GRADUATE WITH INTERESTS IN SOFTWARE ENGINEERING, ANALYTICS, AND CONTINUOUS IMPROVEMENT.
+                <span class="terminal-text">ANALYZING. BUILDING. IMPROVING.</span><br><br>
+                TURNING COMPLEX PROBLEMS INTO PRACTICAL SOFTWARE AND DATA-DRIVEN SOLUTIONS. ECE GRADUATE FOCUSED ON SOFTWARE ENGINEERING, ANALYTICS, AND CONTINUOUS GROWTH.
             </p>
             <div class="cta-buttons">
-                <a href="#projects" class="btn">EXECUTE_PORTFOLIO()</a>
-                <a href="#contact" class="btn btn-secondary">ESTABLISH_CONNECTION()</a>
+                <a href="#projects" class="btn">PROJECTS()</a>
+                <a href="#contact" class="btn btn-secondary">CONNECT()</a>
             </div>
         </div>
     </section>
@@ -1465,14 +1625,16 @@
             <h2 class="section-title">ABOUT_ME.TXT</h2>
             <div class="about-content">
                 <p class="about-text">
-                    I AM A FINAL-YEAR <span class="highlight matrix-text">B.TECH ELECTRONICS AND COMMUNICATION ENGINEERING</span> STUDENT AT 
-                    <span class="highlight matrix-text">SREYAS INSTITUTE OF ENGINEERING AND TECHNOLOGY</span>, WITH A STRONG PASSION FOR SOFTWARE DEVELOPMENT 
-                    AND FULL-STACK TECHNOLOGIES. MY JOURNEY IN ELECTRONICS HAS GIVEN ME A UNIQUE PERSPECTIVE ON PROBLEM-SOLVING, 
-                    WHICH I NOW APPLY TO CREATING INNOVATIVE WEB APPLICATIONS.
+                    I AM A <span class="highlight matrix-text">B.TECH GRADUATE IN ELECTRONICS AND COMMUNICATION ENGINEERING</span> FROM
+                    <span class="highlight matrix-text">SREYAS INSTITUTE OF ENGINEERING AND TECHNOLOGY</span>. MY INTERESTS LIE IN SOFTWARE DEVELOPMENT,
+                    DATA-DRIVEN PROBLEM SOLVING, AND BUILDING APPLICATIONS THAT DELIVER PRACTICAL VALUE. I ENJOY WORKING ACROSS DIFFERENT TECHNOLOGIES
+                    TO DESIGN EFFICIENT AND USER-FOCUSED SOLUTIONS.
                 </p>
+
                 <p class="about-text">
-                    I BELIEVE IN THE POWER OF TECHNOLOGY TO TRANSFORM IDEAS INTO REALITY. WHETHER IT'S BUILDING RESPONSIVE WEB APPLICATIONS, 
-                    OPTIMIZING DATABASE QUERIES, OR IMPLEMENTING MACHINE LEARNING ALGORITHMS, I APPROACH EACH CHALLENGE WITH CURIOSITY AND DEDICATION.
+                    MY EXPERIENCE INCLUDES DEVELOPING WEB APPLICATIONS, AI-POWERED SOLUTIONS, AND REAL-TIME SYSTEMS USING JAVA, PYTHON, SQL,
+                    JAVASCRIPT, AND MODERN DEVELOPMENT TOOLS. I CONTINUOUSLY EXPLORE NEW TECHNOLOGIES, STRENGTHEN MY PROBLEM-SOLVING ABILITIES,
+                    AND BUILD PROJECTS THAT COMBINE TECHNICAL DEPTH WITH REAL-WORLD IMPACT.
                 </p>
             </div>
         </div>
@@ -1481,10 +1643,10 @@
     <!-- Skills Section -->
     <section id="skills" class="section skills">
         <div class="container">
-            <h2 class="section-title">SKILLS_&_TECHNOLOGIES.DAT</h2>
+            <h2 class="section-title">SKILLS_&_TECHNOLOGIES</h2>
             <div class="skills-grid">
                 <div class="skill-category">
-                    <h3>PROGRAMMING_LANGUAGES.EXE</h3>
+                    <h3>PROGRAMMING_LANGUAGES</h3>
                     <div class="skill-item">
                         <span class="skill-name">JAVASCRIPT</span>
                         <div class="skill-level">
@@ -1512,7 +1674,7 @@
                 </div>
 
                 <div class="skill-category">
-                    <h3>WEB_TECHNOLOGIES.SYS</h3>
+                    <h3>WEB_TECHNOLOGIES</h3>
                     <div class="skill-item">
                         <span class="skill-name">HTML/CSS</span>
                         <div class="skill-level">
@@ -1540,7 +1702,7 @@
                 </div>
 
                 <div class="skill-category">
-                    <h3>CORE_SUBJECTS.BIN</h3>
+                    <h3>CORE_SUBJECTS</h3>
                     <div class="skill-item">
                         <span class="skill-name">DSA</span>
                         <div class="skill-level">
@@ -1755,7 +1917,7 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2024 SURYA.EXE | ALL RIGHTS RESERVED | BUILT WITH PASSION AND DEDICATION</p>
+            <p>&copy; 2024 SURYA | ALL RIGHTS RESERVED | BUILT WITH PASSION AND DEDICATION</p>
         </div>
     </footer>
 
@@ -2032,10 +2194,12 @@ document.querySelectorAll('.section, .scroll-animate').forEach(element => {
             };
         }
 
+        /* Scroll auto-fit removed per user request. */
+
         // ===== CONSOLE WELCOME MESSAGE =====
         
         console.log(`
-        🤖 SYSTEM INITIALIZED: SURYA.EXE
+        🤖 SYSTEM INITIALIZED: SURYA
         
         ==========================================
         
