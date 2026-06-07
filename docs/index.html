@@ -57,7 +57,11 @@
             transform-origin: 0 0;
             /* Use custom SVG cursor (hotspot 4 4). Falls back to default when unavailable. */
             /* Use path relative to this file so opening docs/index.html directly works */
+<<<<<<< HEAD
             cursor: url('./public/cursor-pointer.png')4 4, auto;
+=======
+            cursor: url('./public/cursor-pointer.png'), pointer;
+>>>>>>> a1fe114 (Add custom cursor SVG)
             
         }
 
@@ -553,7 +557,11 @@ border: 2px solid rgba(0, 229, 255, 0.7);
 
         /* Ensure interactive elements show the custom cursor and pointer fallback */
         a, button, .btn, .btn-secondary {
+<<<<<<< HEAD
             cursor: url('./public/cursor-pointer.png') 2 2, pointer;
+=======
+            cursor: url('../public/cursor-pointer.png') 2 2, pointer;
+>>>>>>> a1fe114 (Add custom cursor SVG)
         }
 
         .btn::before {
@@ -1526,6 +1534,49 @@ border: 2px solid rgba(0, 229, 255, 0.7);
             display: block;
           }
         }
+        
+                /* ===== MOBILE OVERRIDES: simplify and fix scaling on small devices ===== */
+                @media (max-width: 768px) {
+                    /* Disable global zoom/scale used for desktop so mobile renders at native scale */
+                    body {
+                        zoom: 1 !important;
+                        -moz-transform: none !important;
+                        transform: none !important;
+                        overflow-x: hidden;
+                    }
+
+                    /* Hide heavy background animations to improve performance and clarity on mobile */
+                    .bg-animation,
+                    .animated-grid,
+                    .floating-code,
+                    .binary-rain,
+                    .geometric-shape,
+                    .scanning-line,
+                    .particle {
+                        display: none !important;
+                        visibility: hidden !important;
+                        opacity: 0 !important;
+                    }
+
+                    /* Make SVGs and images responsive */
+                    img, svg {
+                        max-width: 100% !important;
+                        height: auto !important;
+                        display: block !important;
+                    }
+
+                    /* Slightly reduce heavy card paddings for small screens */
+                    .project-card, .blog-card, .skill-category, .contact-form {
+                        padding: 1rem !important;
+                        border-radius: 12px !important;
+                    }
+
+                    /* Ensure floating resume button doesn't overflow on small screens */
+                    .floating-resume {
+                        right: 0.6rem !important;
+                        bottom: 0.6rem !important;
+                    }
+                }
     </style>
 </head>
 <body>
