@@ -57,11 +57,7 @@
             transform-origin: 0 0;
             /* Use custom SVG cursor (hotspot 4 4). Falls back to default when unavailable. */
             /* Use path relative to this file so opening docs/index.html directly works */
-<<<<<<< HEAD
-            cursor: url('./public/cursor-pointer.png')4 4, auto;
-=======
             cursor: url('./public/cursor-pointer.png'), pointer;
->>>>>>> a1fe114 (Add custom cursor SVG)
             
         }
 
@@ -557,11 +553,7 @@ border: 2px solid rgba(0, 229, 255, 0.7);
 
         /* Ensure interactive elements show the custom cursor and pointer fallback */
         a, button, .btn, .btn-secondary {
-<<<<<<< HEAD
             cursor: url('./public/cursor-pointer.png') 2 2, pointer;
-=======
-            cursor: url('../public/cursor-pointer.png') 2 2, pointer;
->>>>>>> a1fe114 (Add custom cursor SVG)
         }
 
         .btn::before {
@@ -1537,12 +1529,14 @@ border: 2px solid rgba(0, 229, 255, 0.7);
         
                 /* ===== MOBILE OVERRIDES: simplify and fix scaling on small devices ===== */
                 @media (max-width: 768px) {
-                    /* Disable global zoom/scale used for desktop so mobile renders at native scale */
+                    /* Restore native scale on mobile (undo desktop zoom) */
                     body {
                         zoom: 1 !important;
                         -moz-transform: none !important;
                         transform: none !important;
                         overflow-x: hidden;
+                        letter-spacing: normal !important; /* reduce large desktop letter spacing */
+                        -webkit-font-smoothing: antialiased;
                     }
 
                     /* Hide heavy background animations to improve performance and clarity on mobile */
@@ -1556,6 +1550,7 @@ border: 2px solid rgba(0, 229, 255, 0.7);
                         display: none !important;
                         visibility: hidden !important;
                         opacity: 0 !important;
+                        pointer-events: none !important;
                     }
 
                     /* Make SVGs and images responsive */
@@ -1565,16 +1560,237 @@ border: 2px solid rgba(0, 229, 255, 0.7);
                         display: block !important;
                     }
 
-                    /* Slightly reduce heavy card paddings for small screens */
+                    /* Content width and spacing adjustments */
+                    .hero-content, .container, .nav-container {
+                        padding-left: 1rem !important;
+                        padding-right: 1rem !important;
+                        max-width: 95vw !important;
+                    }
+
+                    /* Hero/title sizing and wrapping */
+                    .glitch-text, .hero h1 {
+                        font-size: clamp(1.6rem, 8vw, 2.6rem) !important;
+                        letter-spacing: 2px !important;
+                        line-height: 1.1 !important;
+                        word-break: break-word !important;
+                        white-space: normal !important;
+                    }
+
+                    .hero .tagline {
+                        white-space: normal !important;
+                        overflow-wrap: anywhere !important;
+                        font-size: clamp(0.95rem, 3.5vw, 1.2rem) !important;
+                        margin-bottom: 1rem !important;
+                    }
+
+                    /* Make terminal box wrap on mobile */
+                    .terminal-text {
+                        display: inline-block !important;
+                        max-width: 100% !important;
+                        width: auto !important;
+                        white-space: normal !important;
+                        word-break: break-word !important;
+                        padding: 0.6rem 0.8rem !important;
+                        box-sizing: border-box !important;
+                    }
+
+                    /* Disable typewriter width animation on small screens to avoid overflow */
+                    .typewriter {
+                        white-space: normal !important;
+                        animation: none !important;
+                        border-right: none !important;
+                    }
+
+                    /* Tighter card paddings for small screens */
                     .project-card, .blog-card, .skill-category, .contact-form {
                         padding: 1rem !important;
                         border-radius: 12px !important;
                     }
 
-                    /* Ensure floating resume button doesn't overflow on small screens */
+                    /* Ensure CTA buttons are full-width and readable */
+                    .btn, .btn-secondary {
+                        width: 100% !important;
+                        padding: 0.9rem 1rem !important;
+                        font-size: 1rem !important;
+                        box-sizing: border-box !important;
+                    }
+
+                    /* Improve mobile hamburger touch area and visibility */
+                    .mobile-menu {
+                        display: flex !important;
+                        width: 44px !important;
+                        height: 44px !important;
+                        align-items: center !important;
+                        justify-content: center !important;
+                        border-radius: 6px !important;
+                        margin-left: auto !important;
+                        gap: 4px !important;
+                    }
+
+                    .mobile-menu span {
+                        width: 22px !important;
+                        height: 2px !important;
+                        background: var(--text-primary) !important;
+                        display: block !important;
+                        transition: transform 0.2s ease !important;
+                    }
+
+                    /* Navbar padding for mobile */
+                    .nav-container {
+                        padding: 0.5rem 0.75rem !important;
+                    }
+
+                    /* Floating resume adjust */
                     .floating-resume {
                         right: 0.6rem !important;
                         bottom: 0.6rem !important;
+                    }
+                    /* Increase top spacing so large hero headings aren't hidden behind the fixed navbar */
+                    #home {
+                        padding-top: 5rem !important;
+                    }
+
+                    /* Remove navbar bottom border on mobile to avoid the visible cut line */
+                    .navbar {
+                        border-bottom: none !important;
+                        background: rgba(10,10,10,0.98) !important;
+                    }
+
+                    .logo {
+                        line-height: 1 !important;
+                        font-size: 1.15rem !important;
+                    }
+                    /* Remove any leftover background visuals that may create side gutters */
+                    .bg-animation, .animated-grid { display: none !important; visibility: hidden !important; }
+
+                    /* Force page and containers to occupy full viewport width */
+                    html, body {
+                        width: 100% !important;
+                        min-width: 0 !important;
+                        margin: 0 !important;
+                        padding: 0 !important;
+                    }
+
+                    .container {
+                        max-width: 100% !important;
+                        padding-left: 0.75rem !important;
+                        padding-right: 0.75rem !important;
+                        margin-left: auto !important;
+                        margin-right: auto !important;
+                    }
+
+                    .hero, .section {
+                        width: 100% !important;
+                        padding-left: 0 !important;
+                        padding-right: 0 !important;
+                    }
+
+                    /* Ensure hero-content fills the available width while remaining centered */
+                    .hero-content {
+                        width: 100% !important;
+                        max-width: 95vw !important;
+                        margin-left: auto !important;
+                        margin-right: auto !important;
+                        padding-left: 0.5rem !important;
+                        padding-right: 0.5rem !important;
+                    }
+                    /* Strong full-width enforcement to eliminate right-side blank gutter */
+                    html, body {
+                        width: 100vw !important;
+                        max-width: 100vw !important;
+                        overflow-x: hidden !important;
+                        transform: none !important;
+                        margin: 0 !important;
+                        padding: 0 !important;
+                    }
+
+                    .nav-container, .container, .section {
+                        width: 100% !important;
+                        max-width: 100% !important;
+                        padding-left: 0.6rem !important;
+                        padding-right: 0.6rem !important;
+                        margin-left: auto !important;
+                        margin-right: auto !important;
+                    }
+
+                    /* Remove any accidental left/right transforms on large elements */
+                    .hero, .hero-content, .container, .section, .project-card, .blog-card {
+                        transform: none !important;
+                        left: auto !important;
+                        right: auto !important;
+                    }
+                }
+
+                /* Use same glitch animation on mobile as desktop for exact effect */
+                @media (max-width: 768px) {
+                    .glitch-text {
+                        font-size: clamp(1.6rem, 7vw, 2.6rem) !important;
+                        letter-spacing: 2px !important;
+                        line-height: 1.04 !important;
+                        text-shadow: 0 0 10px rgba(0,255,65,0.14) !important;
+                        color: var(--accent-green) !important;
+                        position: relative !important;
+                        -webkit-font-smoothing: antialiased !important;
+                    }
+
+                    .glitch-text::before,
+                    .glitch-text::after {
+                        content: attr(data-text) !important;
+                        position: absolute !important;
+                        top: 0 !important;
+                        left: 0 !important;
+                        width: 100% !important;
+                        height: 100% !important;
+                        pointer-events: none !important;
+                    }
+
+                    /* Match desktop layers and animations exactly */
+                    .glitch-text::before {
+                        animation: glitch-1 2s infinite !important;
+                        color: var(--accent-green) !important;
+                        z-index: -1 !important;
+                    }
+
+                    .glitch-text::after {
+                        animation: glitch-2 2s infinite !important;
+                        color: var(--accent-cyan) !important;
+                        z-index: -2 !important;
+                    }
+                }
+                /* Strong centering rules for mobile to fix left-aligned content */
+                @media (max-width: 768px) {
+                    /* Make main layout stacks centered */
+                    .hero, .section, .container {
+                        display: flex !important;
+                        flex-direction: column !important;
+                        align-items: center !important;
+                        justify-content: center !important;
+                        text-align: center !important;
+                    }
+
+                    /* Ensure hero content takes full width but remains centered */
+                    .hero-content {
+                        margin: 0 auto !important;
+                        padding: 0 1rem !important;
+                        width: 100% !important;
+                        max-width: 95vw !important;
+                        box-sizing: border-box !important;
+                    }
+
+                    /* Center containers and inner blocks */
+                    .container {
+                        margin-left: auto !important;
+                        margin-right: auto !important;
+                        padding-left: 1rem !important;
+                        padding-right: 1rem !important;
+                        max-width: 95vw !important;
+                    }
+
+                    .about-content, .skills-grid, .projects-grid, .blog-grid, .contact-content {
+                        margin-left: auto !important;
+                        margin-right: auto !important;
+                        text-align: center !important;
+                        align-items: center !important;
                     }
                 }
     </style>
