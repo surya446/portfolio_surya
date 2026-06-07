@@ -2,10 +2,10 @@
   "name": "mybackend",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "vercel dev",
-    "build": "",
-    "start": ""
+    "start": "node index.js"
   },
   "dependencies": {
     "mongoose": "^8.16.1"
