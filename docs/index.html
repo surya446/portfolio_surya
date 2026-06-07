@@ -1526,6 +1526,24 @@ border: 2px solid rgba(0, 229, 255, 0.7);
                         text-align: center;
                     }
                     .nav-links a { display: block; width: 100%; padding: 0.75rem 0; }
+                    /* Stack contact form above contact info on mobile */
+                    .contact-content {
+                        display: flex !important;
+                        flex-direction: column-reverse !important;
+                        gap: 1rem !important;
+                    }
+                    /* Make the contact form exactly fit the container width without increasing height */
+                    .contact-form {
+                        width: 100% !important;
+                        max-width: 100% !important;
+                        box-sizing: border-box !important;
+                        padding-left: 0.75rem !important;
+                        padding-right: 0.75rem !important;
+                    }
+                    .form-group input, .form-group textarea {
+                        width: 100% !important;
+                        box-sizing: border-box !important;
+                    }
           }
         }
 
