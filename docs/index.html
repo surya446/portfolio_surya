@@ -104,12 +104,17 @@
         }
 
         .glitch-text {
+            display: inline-block;
             position: relative;
+            z-index: 10;
             color: var(--text-primary);
             font-family: 'Orbitron', monospace;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 2px;
+            line-height: 1;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         .glitch-text::before,
@@ -118,37 +123,48 @@
             position: absolute;
             top: 0;
             left: 0;
+            display: block;
             width: 100%;
             height: 100%;
+            font: inherit;
+            font-family: inherit;
+            font-weight: inherit;
+            text-transform: inherit;
+            letter-spacing: inherit;
+            line-height: inherit;
+            white-space: pre;
+            pointer-events: none;
+            transform-origin: left top;
+            will-change: transform;
         }
 
         .glitch-text::before {
             animation: glitch-1 2s infinite;
             color: var(--accent-green);
-            z-index: -1;
+            z-index: 9;
         }
 
         .glitch-text::after {
             animation: glitch-2 2s infinite;
             color: var(--accent-cyan);
-            z-index: -2;
+            z-index: 8;
         }
 
         @keyframes glitch-1 {
             0%, 14%, 15%, 49%, 50%, 99%, 100% {
-                transform: translate(0);
+                transform: translate3d(0, 0, 0);
             }
             15%, 49% {
-                transform: translate(-2px, -1px);
+                transform: translate3d(-2px, -1px, 0);
             }
         }
 
         @keyframes glitch-2 {
             0%, 20%, 21%, 62%, 63%, 99%, 100% {
-                transform: translate(0);
+                transform: translate3d(0, 0, 0);
             }
             21%, 62% {
-                transform: translate(2px, 1px);
+                transform: translate3d(2px, 1px, 0);
             }
         }
 
@@ -1727,6 +1743,7 @@ border: 2px solid rgba(0, 229, 255, 0.7);
                         font-size: clamp(1.6rem, 7vw, 2.6rem) !important;
                         letter-spacing: 2px !important;
                         line-height: 1.04 !important;
+                        padding-top: 0rem !important;
                         text-shadow: 0 0 10px rgba(0,255,65,0.14) !important;
                         color: var(--accent-green) !important;
                         position: relative !important;
@@ -1748,13 +1765,13 @@ border: 2px solid rgba(0, 229, 255, 0.7);
                     .glitch-text::before {
                         animation: glitch-1 2s infinite !important;
                         color: var(--accent-green) !important;
-                        z-index: -1 !important;
+                        z-index: 9 !important;
                     }
 
                     .glitch-text::after {
                         animation: glitch-2 2s infinite !important;
                         color: var(--accent-cyan) !important;
-                        z-index: -2 !important;
+                        z-index: 8 !important;
                     }
                 }
                 /* Strong centering rules for mobile to fix left-aligned content */
