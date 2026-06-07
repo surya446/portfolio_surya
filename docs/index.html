@@ -1972,7 +1972,7 @@ border: 2px solid rgba(0, 229, 255, 0.7);
         <div class="floating-code" style="top: 40%; animation-delay: 6s;">git commit -m "Another day, another feature"</div>
         <div class="floating-code" style="top: 50%; animation-delay: 8s;">npm install success</div>
         <div class="floating-code" style="top: 60%; animation-delay: 10s;">SELECT * FROM opportunities WHERE challenge = 'accepted';</div>
-        <div class="floating-code" style="top: 70%; animation-delay: 12s;">console.log('Hello, World!');</div>
+        <div class="floating-code" style="top: 70%; animation-delay: 12s;">Hello, World!</div>
         <div class="floating-code" style="top: 80%; animation-delay: 14s;">if(problem) { solve(problem); }</div>
 
         <!-- Binary Rain -->
@@ -2475,16 +2475,11 @@ border: 2px solid rgba(0, 229, 255, 0.7);
             elements.scanLines = document.querySelectorAll('.scanning-line');
             elements.particles = document.querySelectorAll('.particle');
 
-            console.log('Background animation init:', {
-                prefersReduced,
-                width: window.innerWidth,
-                grid: !!elements.grid,
-                codeSnippets: elements.codeSnippets.length
-            });
+            // background animation init (logs removed for production)
 
             // Force-enable on small screens (user requested mobile parity). Respect reduced-motion for larger screens.
             if (window.innerWidth <= 768) {
-                console.log('Forcing background animations on mobile (<=768px).');
+                // forcing background animations on mobile (logs removed)
                 animateLoop();
                 // Add class to force CSS animation if the element's inline styles or other rules blocked it
                 if (elements.grid) {
@@ -2504,11 +2499,7 @@ border: 2px solid rgba(0, 229, 255, 0.7);
                         elements.codeSnippets.forEach((code, idx) => {
                             try {
                                 const cs = window.getComputedStyle(code);
-                                console.log('floating-code['+idx+'] computed:', {
-                                    animationName: cs.animationName || cs.getPropertyValue('animation-name'),
-                                    animationPlayState: cs.animationPlayState || cs.getPropertyValue('animation-play-state'),
-                                    transform: cs.transform || cs.getPropertyValue('transform')
-                                });
+                                // floating-code diagnostics removed for production
 
                                 // Force restart of CSS animation (works around some mobile issues)
                                 code.style.webkitAnimation = 'none';
@@ -2520,13 +2511,9 @@ border: 2px solid rgba(0, 229, 255, 0.7);
                                 code.style.animation = 'floatCode 15s linear infinite';
                                 code.style.animationPlayState = 'running';
 
-                                const cs2 = window.getComputedStyle(code);
-                                console.log('floating-code['+idx+'] after restart:', {
-                                    animationName: cs2.animationName,
-                                    animationPlayState: cs2.animationPlayState
-                                });
+                                // post-restart diagnostics removed
                             } catch (e) {
-                                console.warn('ensureFloatingCodeAnimation error', e);
+                                // ensureFloatingCodeAnimation error (suppressed)
                             }
                         });
                     }
@@ -2540,11 +2527,7 @@ border: 2px solid rgba(0, 229, 255, 0.7);
                             elements.shapes.forEach((shape, idx) => {
                                 try {
                                     const cs = window.getComputedStyle(shape);
-                                    console.log('geometric-shape['+idx+'] computed:', {
-                                        animationName: cs.animationName || cs.getPropertyValue('animation-name'),
-                                        animationPlayState: cs.animationPlayState || cs.getPropertyValue('animation-play-state'),
-                                        transform: cs.transform || cs.getPropertyValue('transform')
-                                    });
+                                    // geometric-shape diagnostics removed for production
 
                                     // Force-restart CSS animation if not running
                                     if (!cs.animationName || cs.animationPlayState !== 'running') {
@@ -2558,7 +2541,7 @@ border: 2px solid rgba(0, 229, 255, 0.7);
                                         shape.style.animationPlayState = 'running';
                                     }
                                 } catch (e) {
-                                    console.warn('ensureShapesAnimation error', e);
+                                    // ensureShapesAnimation error (suppressed)
                                 }
                             });
                         }
@@ -2569,36 +2552,39 @@ border: 2px solid rgba(0, 229, 255, 0.7);
                         // If shapes appear static on mobile, start a lightweight JS fallback
                         function startShapesFallback() {
                             if (window.__shapesRAF) return; // already running
+                            // attempting to start geometric shapes JS fallback (log removed)
                             const shapes = elements.shapes || document.querySelectorAll('.geometric-shape');
                             if (!shapes || shapes.length === 0) return;
 
-                            // initialize base positions and avoid layout reads inside the RAF loop
+                            // initialize base positions
                             shapes.forEach((shape, i) => {
+                                // compute base top/left in pixels and store, but do not move them — only rotate
                                 const cs = window.getComputedStyle(shape);
                                 let topVal = cs.top || shape.style.top || '0px';
                                 let leftVal = cs.left || shape.style.left || '0px';
-                                if (String(topVal).indexOf('%') !== -1) {
+                                if (topVal.indexOf('%') !== -1) {
                                     const pct = parseFloat(topVal) || 0;
                                     topVal = (window.innerHeight * pct / 100) + 'px';
                                 }
-                                if (String(leftVal).indexOf('%') !== -1) {
+                                if (leftVal.indexOf('%') !== -1) {
                                     const pct = parseFloat(leftVal) || 0;
                                     leftVal = (window.innerWidth * pct / 100) + 'px';
                                 }
                                 const baseTop = parseFloat(topVal) || 0;
                                 const baseLeft = parseFloat(leftVal) || 0;
-                                shape.dataset.__baseTop = String(baseTop);
-                                shape.dataset.__baseLeft = String(baseLeft);
-                                shape.dataset.__freq = String(0.6 + (i * 0.05));
+                                shape.dataset.__baseTop = baseTop;
+                                shape.dataset.__baseLeft = baseLeft;
+                                shape.dataset.__freq = 0.6 + (i * 0.05);
+                                // ensure visible and override CSS animation to avoid conflict
                                 shape.style.animation = 'none';
                                 shape.style.webkitAnimation = 'none';
+                                // use fixed positioning like the floating-code fallback so movement is viewport-relative
                                 shape.style.position = 'fixed';
                                 shape.style.top = `${baseTop}px`;
                                 shape.style.left = `${baseLeft}px`;
                                 shape.style.pointerEvents = 'none';
                                 shape.style.zIndex = '0';
-                                shape.style.willChange = 'transform';
-                                shape.style.transform = 'translate3d(0,0,0)';
+                                shape.style.willChange = 'left, top, transform';
                             });
 
                             const start = performance.now();
@@ -2606,19 +2592,32 @@ border: 2px solid rgba(0, 229, 255, 0.7);
                                 const t = (now - start) / 1000; // seconds
                                 shapes.forEach((shape, i) => {
                                     const freq = parseFloat(shape.dataset.__freq) || 0.6;
+                                    // small circular motion around base position so movement is visible
                                     const radius = 8 + (i % 3) * 4;
-                                    const baseL = parseFloat(shape.dataset.__baseLeft) || 0;
-                                    const baseT = parseFloat(shape.dataset.__baseTop) || 0;
-                                    const x = baseL + Math.cos(t * freq + i) * radius;
-                                    const y = baseT + Math.sin(t * freq + i) * radius;
-                                    // Use transform only (GPU-accelerated), avoid updating left/top each frame
-                                    const dx = x - baseL;
-                                    const dy = y - baseT;
-                                    shape.style.transform = `translate3d(${dx}px, ${dy}px, 0)`;
+                                    const x = (parseFloat(shape.dataset.__baseLeft) || 0) + Math.cos(t * freq + i) * radius;
+                                    const y = (parseFloat(shape.dataset.__baseTop) || 0) + Math.sin(t * freq + i) * radius;
+                                    // update `left/top` (fixed) each frame to ensure visible motion on mobile
+                                    shape.style.left = `${x}px`;
+                                    shape.style.top = `${y}px`;
                                 });
                                 window.__shapesRAF = requestAnimationFrame(loop);
                             }
-                            window.__shapesRAF = requestAnimationFrame(loop);
+                        window.__shapesRAF = requestAnimationFrame(loop);
+                        // geometric shapes JS fallback started (log removed)
+                            // mark for GPU compositing and add a small runtime tick log to confirm activity
+                            shapes.forEach(s => {
+                                s.style.willChange = 'transform';
+                            });
+                            if (!window.__shapesDebugInterval) {
+                                window.__shapesDebugInterval = setInterval(() => {
+                                    try {
+                                        const s = shapes[0];
+                                        // shapesFallback tick suppressed
+                                    } catch (e) {
+                                        // ignore
+                                    }
+                                }, 1000);
+                            }
                         }
 
                         // Start fallback on small screens to guarantee motion
@@ -2631,12 +2630,12 @@ border: 2px solid rgba(0, 229, 255, 0.7);
                                 if (first) {
                                     const cs = window.getComputedStyle(first);
                                     if (!cs || cs.animationName === 'none') {
-                                        console.log('CSS geometricFloat still inactive — forcing JS fallback.');
+                                        // CSS geometricFloat inactive — forcing JS fallback (log removed)
                                         startShapesFallback();
                                     }
                                 }
                             } catch (e) {
-                                console.warn('shapes fallback auto-start check failed', e);
+                                // shapes fallback auto-start check failed (suppressed)
                             }
                         }, 400);
 
@@ -2646,42 +2645,47 @@ border: 2px solid rgba(0, 229, 255, 0.7);
                         const codes = elements.codeSnippets || document.querySelectorAll('.floating-code');
                         if (!codes || codes.length === 0) return;
                         // initialize data for each element and disable CSS animation while JS drives motion
-                        const vw = window.innerWidth;
                         codes.forEach((el, i) => {
-                            const rect = el.getBoundingClientRect();
-                            el.dataset.__fcWidth = String(rect.width || 160);
+                            el.dataset.__fcWidth = el.getBoundingClientRect().width || 160;
+                            // respect any provided animation-delay inline style (e.g., 'animation-delay: 2s')
                             const delayMatch = (el.getAttribute('style') || '').match(/animation-delay:\s*([0-9\.]+)s/);
-                            el.dataset.__fcDelay = String(delayMatch ? parseFloat(delayMatch[1]) : 0);
-                            el.dataset.__fcSpeed = String(60); // px per second
+                            el.dataset.__fcDelay = delayMatch ? parseFloat(delayMatch[1]) : 0;
+                            el.dataset.__fcSpeed = 60; // px per second
+                            // disable CSS animation for this element to prevent conflicts
                             el.style.animation = 'none';
                             el.style.webkitAnimation = 'none';
+                            // make fixed relative to viewport for predictable movement
                             el.style.position = 'fixed';
+                            // preserve inline top if provided
                             const topMatch = (el.getAttribute('style') || '').match(/top:\s*([^;]+)/);
                             if (topMatch) el.style.top = topMatch[1];
                             el.style.display = 'block';
                             el.style.opacity = '1';
                             el.style.pointerEvents = 'none';
-                            el.style.willChange = 'transform';
-                            el.style.transform = 'translate3d(0,0,0)';
+                            el.style.transform = 'none';
                         });
 
                         const start = performance.now();
                         function loop(now) {
                             const t = (now - start) / 1000; // seconds
-                            const vwLocal = window.innerWidth;
+                            const vw = window.innerWidth;
                             codes.forEach((el, i) => {
                                 const delay = parseFloat(el.dataset.__fcDelay || 0);
                                 const elapsed = Math.max(0, t - delay);
                                 const speed = parseFloat(el.dataset.__fcSpeed || 60);
-                                const width = parseFloat(el.dataset.__fcWidth) || 160;
-                                const range = vwLocal + width + 200;
-                                const pos = ((elapsed * speed) % range) - width - 100;
-                                // GPU-accelerated transform
-                                el.style.transform = `translate3d(${pos}px, 0, 0)`;
+                                const range = vw + (parseFloat(el.dataset.__fcWidth) || 160) + 200;
+                                // position moves at speed px/sec, wraps around when > range
+                                const pos = ((elapsed * speed) % range) - (parseFloat(el.dataset.__fcWidth) || 160) - 100;
+                                // set left for fixed-position movement to avoid transform conflicts
+                                el.style.left = `${pos}px`;
+                                el.style.transform = 'none';
                             });
                             window.__floatingCodeRAF = requestAnimationFrame(loop);
                         }
                         window.__floatingCodeRAF = requestAnimationFrame(loop);
+                        // floating-code JS fallback started (log removed)
+
+                        // debug badge removed in production
                     }
 
                     // Start JS fallback immediately to guarantee animation on mobile
@@ -2693,7 +2697,7 @@ border: 2px solid rgba(0, 229, 255, 0.7);
                         const anims = elements.grid && elements.grid.getAnimations ? elements.grid.getAnimations() : [];
                         const running = anims && anims.some(a => a.playState === 'running');
                         if (!running) {
-                            console.log('CSS gridRotate not running — starting JS fallback rotation.');
+                            // CSS gridRotate not running — starting JS fallback rotation (log removed)
                             // start JS fallback
                             const start = performance.now();
                             gridFallbackId = requestAnimationFrame(function rotateFallback(now) {
@@ -2708,28 +2712,35 @@ border: 2px solid rgba(0, 229, 255, 0.7);
                                 gridFallbackId = requestAnimationFrame(rotateFallback);
                             });
                         } else {
-                            console.log('CSS gridRotate confirmed running.');
+                            // CSS gridRotate confirmed running (log removed)
                         }
                     } catch (e) {
-                        console.warn('Grid animation detection failed, starting fallback.', e);
+                        // grid animation detection failed, starting fallback (suppressed)
                     }
                 }, 120);
 
                 // Also detect whether binary rain appears static on mobile; if so, start a JS fallback animation.
                 // Use a persistent starter function to guarantee the rAF loop runs.
-                    function startBinaryFallback() {
+                function startBinaryFallback() {
                     if (window.__binaryFallbackRAF) return; // already running
                     const rains = elements.binaryRain || document.querySelectorAll('.binary-rain');
                     if (!rains || rains.length === 0) return;
+                    // Distribute columns evenly across the viewport width to match desktop spacing,
+                    // then add a small horizontal jitter so they feel organic.
                     const count = rains.length;
+                    const spacing = window.innerWidth / (count + 1);
+                    // Force up to 5 columns on mobile: one left-anchored + four evenly spaced columns
                     const visibleCount = Math.min(count, 5);
+                    // Deterministically choose columns left-to-right and pick the first `visibleCount`
                     const sortedRains = Array.from(rains).slice().sort((a, b) => {
+                        // prefer bounding rect left, fall back to computed left
                         const la = a.getBoundingClientRect().left || parseFloat(getComputedStyle(a).left) || 0;
                         const lb = b.getBoundingClientRect().left || parseFloat(getComputedStyle(b).left) || 0;
                         return la - lb;
                     });
                     const activeRains = sortedRains.slice(0, visibleCount);
 
+                    // Hide any extra columns (those not selected) to avoid overlapping animations
                     Array.from(rains).forEach((r) => {
                         if (activeRains.indexOf(r) === -1) {
                             r.style.display = 'none';
@@ -2740,30 +2751,41 @@ border: 2px solid rgba(0, 229, 255, 0.7);
                         }
                     });
 
-                    const fixedSpeed = 120; // px/sec
+                    // Choose a fixed speed for all visible binary columns so motion is uniform
+                    const fixedSpeed = 120; // pixels per second-ish for the fallback loop
                     activeRains.forEach((r, i) => {
+                        // set fixed speed and a randomized base phase (staggered)
                         r.dataset._brSpeed = String(fixedSpeed);
                         if (!r.dataset._brPhase) r.dataset._brPhase = (Math.random() * 200).toString();
                         r.classList.add('mobile-binary-fallback');
+                        // keep columns positioned relative to the .bg-animation container
                         r.style.position = 'absolute';
+                        // Space columns so they span the full width from leftmost (0%) to rightmost (100%)
                         let leftPct;
                         if (visibleCount > 1) {
-                            leftPct = (i / (visibleCount - 1)) * 100;
+                            leftPct = (i / (visibleCount - 1)) * 100; // 0%, 25%, 50%, ... for 5 columns
                         } else {
-                            leftPct = 50;
+                            leftPct = 50; // single column centered
                         }
+                        // Do not add jitter — user requested exact span from left to right
+                        leftPct = Math.round(leftPct * 100) / 100; // two decimals
+                        // clamp and set
                         leftPct = Math.max(2, Math.min(98, Math.round(leftPct * 100) / 100));
                         r.style.left = `${leftPct}%`;
+                        // measure column height and stagger vertically to avoid overlap like desktop
                         const rainHeight = Math.max(60, Math.round(r.getBoundingClientRect().height || 80));
                         const initialTop = -Math.random() * (window.innerHeight + rainHeight) - (i * (rainHeight + 30));
-                        r.dataset._brBaseTop = String(Math.round(initialTop));
+                        r.style.top = `${Math.round(initialTop)}px`;
+                        // bias phase so columns are offset more predictably and staggered
                         r.dataset._brPhase = (parseFloat(r.dataset._brPhase || 0) + i * (rainHeight * 0.8)).toString();
+                        // match desktop density but slightly smaller for mobile
                         r.style.fontSize = '12px';
                         r.style.lineHeight = '1.05';
-                        r.style.willChange = 'transform, opacity';
+                        r.style.willChange = 'top, opacity, transform';
                         r.style.whiteSpace = 'pre';
                         r.style.pointerEvents = 'none';
                         r.style.zIndex = '-1';
+                        // subtle system-like block styling to match desktop grid aesthetic
                         r.style.background = 'rgba(0, 10, 0, 0.18)';
                         r.style.padding = '6px 8px';
                         r.style.borderLeft = '2px solid rgba(0,255,65,0.06)';
@@ -2771,7 +2793,6 @@ border: 2px solid rgba(0, 229, 255, 0.7);
                         r.style.boxShadow = '0 4px 18px rgba(0,0,0,0.35)';
                         r.style.backdropFilter = 'blur(2px)';
                         r.style.letterSpacing = '1px';
-                        r.style.transform = `translate3d(0, ${r.dataset._brBaseTop}px, 0)`;
                     });
                     const start = performance.now();
                     function loop(now) {
@@ -2783,14 +2804,16 @@ border: 2px solid rgba(0, 229, 255, 0.7);
                             const base = ((t * speed) + phase) % range - 120;
                             const ease = Math.sin(((t * speed) + phase) * 0.01) * 12;
                             const offset = base + ease;
-                            // Use transform for GPU-accelerated motion
-                            rain.style.transform = `translate3d(0, ${offset}px, 0)`;
+                            // Use top for layout-based movement (more reliable on some mobile browsers)
+                            rain.style.transform = 'none';
+                            rain.style.top = `${offset}px`;
                             const pulse = 0.6 + Math.sin((t + index) * 2) * 0.15;
                             rain.style.opacity = Math.max(0.25, Math.min(1, pulse));
                         });
                         window.__binaryFallbackRAF = requestAnimationFrame(loop);
                     }
                     window.__binaryFallbackRAF = requestAnimationFrame(loop);
+                    // persistent binary fallback started (log removed)
                 }
 
                 setTimeout(() => {
@@ -2801,21 +2824,21 @@ border: 2px solid rgba(0, 229, 255, 0.7);
                         setTimeout(() => {
                             const afterTransform = getComputedStyle(firstRain).transform;
                             if (beforeTransform === afterTransform) {
-                                console.log('Binary rain appears static on mobile — starting JS fallback for binary rain.');
+                                // binary rain static on mobile — starting JS fallback (log removed)
                                 // start persistent fallback that won't be cleared by other loops
                                 startBinaryFallback();
                             } else {
-                                console.log('Binary rain CSS animation confirmed running (computed transform changed).');
+                                // binary rain CSS animation confirmed running (log removed)
                             }
                         }, 160);
                     } catch (e) {
-                        console.warn('Binary rain detection failed.', e);
+                        // binary rain detection failed (suppressed)
                     }
                 }, 160);
             } else if (!prefersReduced) {
                 animateLoop();
             } else {
-                console.log('Animations disabled due to prefers-reduced-motion.');
+                // animations disabled due to prefers-reduced-motion (log removed)
             }
         })();
 
@@ -3032,24 +3055,7 @@ document.querySelectorAll('.section, .scroll-animate').forEach(element => {
 
         // ===== CONSOLE WELCOME MESSAGE =====
         
-        console.log(`
-        🤖 SYSTEM INITIALIZED: SURYA
-        
-        ==========================================
-        
-        WELCOME TO THE MATRIX, FELLOW DEVELOPER!
-        IF YOU'RE READING THIS, YOU'VE ACCESSED
-        THE SOURCE CODE. IMPRESSIVE.
-        
-        📧 EMAIL: SURYA@EXAMPLE.COM
-        💼 LINKEDIN: LINKEDIN.COM/IN/SURYA
-        🔗 GITHUB: GITHUB.COM/SURYA
-        
-        ==========================================
-        
-        BUILT WITH ❤️ USING VANILLA HTML, CSS & JS
-        ENHANCED WITH ROBOTIC AESTHETICS
-        `);
+        // console welcome message removed for production
 
         // ===== EASTER EGG - KONAMI CODE =====
         
@@ -3113,18 +3119,6 @@ document.querySelectorAll('.section, .scroll-animate').forEach(element => {
             if (window.__binaryFallbackRAF) {
                 cancelAnimationFrame(window.__binaryFallbackRAF);
                 window.__binaryFallbackRAF = null;
-            }
-            if (window.__floatingCodeRAF) {
-                cancelAnimationFrame(window.__floatingCodeRAF);
-                window.__floatingCodeRAF = null;
-            }
-            if (window.__shapesRAF) {
-                cancelAnimationFrame(window.__shapesRAF);
-                window.__shapesRAF = null;
-            }
-            if (window.__shapesDebugInterval) {
-                clearInterval(window.__shapesDebugInterval);
-                window.__shapesDebugInterval = null;
             }
         });
         document.querySelector('.contact-form').addEventListener('submit', async function (e) {
