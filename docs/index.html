@@ -1918,6 +1918,17 @@ border: 2px solid rgba(0, 229, 255, 0.7);
                         align-items: center !important;
                     }
                 }
+
+                /* Mobile: soften background animations and brighten foreground for readability */
+                @media (max-width: 768px) {
+                    /* Slightly soften background animation on mobile without changing accent colors */
+                    .bg-animation { opacity: 0.6 !important; }
+                    .animated-grid { opacity: 0.45 !important; filter: brightness(0.85) contrast(0.98); }
+                    .binary-rain { color: rgba(0,255,65,0.18) !important; opacity: 0.95 !important; }
+                    .geometric-shape { border-color: rgba(0,255,65,0.14) !important; opacity: 0.95 !important; }
+                    .scanning-line { opacity: 0.25 !important; }
+                    .particle { opacity: 0.25 !important; }
+                }
     </style>
 </head>
 <body>
