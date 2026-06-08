@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <!-- Google tag (gtag.js) -->
+     
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-DM06G26D02"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
@@ -2362,9 +2363,7 @@ border: 2px solid rgba(0, 229, 255, 0.7);
                     </div>
                 </div>
 
-                <form class="contact-form" action="https://formsubmit.co/surya.u4759@gmail.com" method="POST" novalidate>
-                    <input type="hidden" name="_captcha" value="false">
-                    <input type="hidden" name="_subject" value="New Portfolio Contact Submission">
+                <form class="contact-form" novalidate>
                     <div class="form-group">
                         <label for="name">FULL_NAME.STR</label>
                         <input type="text" id="name" name="name" placeholder="name" required>
@@ -2401,6 +2400,7 @@ border: 2px solid rgba(0, 229, 255, 0.7);
         </div>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
     <script>
         // ===== SCROLL-SYNCHRONIZED BACKGROUND ANIMATIONS =====
         
@@ -2964,19 +2964,26 @@ document.querySelectorAll('.section, .scroll-animate').forEach(element => {
             });
         }
 
-        // ===== CONTACT FORM HANDLING (FormSubmit) =====
+        // ===== CONTACT FORM HANDLING (EmailJS) =====
 
         (function(){
             const form = document.querySelector('.contact-form');
             if (!form) return;
 
-            form.addEventListener('submit', async function (e) {
+            // Initialize EmailJS with public key
+            if (window.emailjs && typeof emailjs.init === 'function') {
+                emailjs.init('HCAbJ3-USZ_ZATyV2');
+            } else {
+                console.warn('EmailJS SDK not loaded');
+            }
+
+            form.addEventListener('submit', function (e) {
                 e.preventDefault();
 
                 const submitBtn = this.querySelector('button[type="submit"]');
                 const originalText = submitBtn.textContent;
 
-                // Collect and validate
+                // Collect and validate (preserve existing validation)
                 const name = (this.querySelector('#name').value || '').trim();
                 const email = (this.querySelector('#email').value || '').trim();
                 const mobileRaw = (this.querySelector('#mobile').value || '').trim();
@@ -2993,50 +3000,36 @@ document.querySelectorAll('.section, .scroll-animate').forEach(element => {
                 submitBtn.textContent = 'TRANSMITTING...';
                 submitBtn.disabled = true;
 
-                // Build FormData with human-friendly field names required by FormSubmit
-                const fd = new FormData();
-                fd.append('Name', name);
-                fd.append('Email', email);
-                fd.append('Phone Number', mobile);
-                fd.append('Message', message);
-                // Preserve hidden control fields
-                fd.append('_captcha', 'false');
-                fd.append('_subject', 'New Portfolio Contact Submission');
+                const templateParams = {
+                    name: name,
+                    email: email,
+                    phone: mobile,
+                    message: message
+                };
 
-                try {
-                    const action = form.getAttribute('action') || 'https://formsubmit.co/surya.u4759@gmail.com';
-                    const res = await fetch(action, {
-                        method: 'POST',
-                        body: fd,
-                        headers: { 'Accept': 'application/json' }
+                emailjs.send('service_cyli49w', 'template_l6k8sgg', templateParams)
+                .then(() => {
+                    const msg = document.createElement('div');
+                    msg.className = 'form-success';
+                    msg.textContent = 'MESSAGE TRANSMITTED — THANK YOU!';
+                    Object.assign(msg.style, {
+                        marginTop: '12px',
+                        padding: '10px 14px',
+                        background: 'rgba(0,200,150,0.08)',
+                        color: '#00e0a0',
+                        borderRadius: '6px',
+                        fontWeight: '600'
                     });
-
-                    if (res.ok) {
-                        // show in-page success message
-                        const msg = document.createElement('div');
-                        msg.className = 'form-success';
-                        msg.textContent = 'MESSAGE TRANSMITTED — THANK YOU!';
-                        Object.assign(msg.style, {
-                            marginTop: '12px',
-                            padding: '10px 14px',
-                            background: 'rgba(0,200,150,0.08)',
-                            color: '#00e0a0',
-                            borderRadius: '6px',
-                            fontWeight: '600'
-                        });
-                        this.appendChild(msg);
-                        setTimeout(() => msg.remove(), 5000);
-                        this.reset();
-                    } else {
-                        const json = await res.json().catch(()=>({}));
-                        alert(json.message || 'ERROR: SUBMISSION FAILED');
-                    }
-                } catch (err) {
-                    alert('ERROR: NETWORK OR SUBMISSION ISSUE');
-                } finally {
+                    form.appendChild(msg);
+                    setTimeout(() => msg.remove(), 5000);
+                    form.reset();
+                }, (err) => {
+                    console.error('EmailJS error:', err);
+                    alert('ERROR: SENDING MESSAGE FAILED. PLEASE TRY AGAIN LATER.');
+                }).finally(() => {
                     submitBtn.textContent = originalText;
                     submitBtn.disabled = false;
-                }
+                });
             });
         })();
 
