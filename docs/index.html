@@ -932,6 +932,11 @@
             right: 2rem;
             z-index: 999;
             animation: floatButton 3s ease-in-out infinite;
+            transition: bottom 0.3s ease;
+        }
+
+        .floating-resume.footer-visible {
+            bottom: calc(var(--footer-offset, 0px) + 1rem);
         }
 
         .floating-resume .btn {
@@ -1967,6 +1972,30 @@
         // Initial check and resize listener
         adjustAnimationsForMobile();
         window.addEventListener('resize', debounce(adjustAnimationsForMobile, 250));
+
+        // ===== KEEP RESUME BUTTON ABOVE FOOTER =====
+
+        const floatingResume = document.querySelector('.floating-resume');
+        const footer = document.querySelector('.footer');
+
+        if (floatingResume && footer) {
+            const updateResumeOffset = () => {
+                const footerHeight = footer.getBoundingClientRect().height;
+                floatingResume.style.setProperty('--footer-offset', `${footerHeight}px`);
+            };
+
+            const footerObserver = new IntersectionObserver(([entry]) => {
+                if (entry.isIntersecting) {
+                    updateResumeOffset();
+                    floatingResume.classList.add('footer-visible');
+                } else {
+                    floatingResume.classList.remove('footer-visible');
+                }
+            });
+
+            footerObserver.observe(footer);
+            window.addEventListener('resize', debounce(updateResumeOffset, 250));
+        }
 
         // ===== EASTER EGG - KONAMI CODE =====
         
