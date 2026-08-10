@@ -388,14 +388,30 @@
             display: none;
             flex-direction: column;
             cursor: pointer;
+            border: 0;
+            background: transparent;
+            padding: 0.5rem;
+            gap: 4px;
+            z-index: 1001;
         }
 
         .mobile-menu span {
             width: 25px;
-            height: 3px;
+            height: 2px;
             background: var(--text-primary);
-            margin: 3px 0;
             transition: 0.3s;
+        }
+
+        .mobile-menu.active span:nth-child(1) {
+            transform: translateY(6px) rotate(45deg);
+        }
+
+        .mobile-menu.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu.active span:nth-child(3) {
+            transform: translateY(-6px) rotate(-45deg);
         }
 
         /* ===== HERO SECTION ===== */
@@ -1032,7 +1048,54 @@
 
         /* ===== RESPONSIVE DESIGN ===== */
         @media (max-width: 768px) {
+            .nav-container {
+                padding: 0.8rem 1rem;
+            }
+
             .nav-links {
+                display: flex;
+                position: absolute;
+                top: calc(100% + 0.5rem);
+                left: 1rem;
+                right: 1rem;
+                flex-direction: column;
+                gap: 0;
+                padding: 0.5rem;
+                background: rgba(255, 255, 255, 0.98);
+                border: 1px solid var(--border-color);
+                border-radius: 14px;
+                box-shadow: 0 15px 35px var(--shadow-medium);
+                opacity: 0;
+                visibility: hidden;
+                transform: translateY(-0.5rem);
+                pointer-events: none;
+                transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
+            }
+
+            .nav-links.active {
+                opacity: 1;
+                visibility: visible;
+                transform: translateY(0);
+                pointer-events: auto;
+            }
+
+            .nav-links li {
+                width: 100%;
+            }
+
+            .nav-links a {
+                display: block;
+                padding: 0.85rem 1rem;
+                border-radius: 9px;
+                font-size: 0.85rem;
+            }
+
+            .nav-links a:hover,
+            .nav-links a.active {
+                background: rgba(0, 102, 255, 0.08);
+            }
+
+            .nav-links a::after {
                 display: none;
             }
 
@@ -1040,16 +1103,43 @@
                 display: flex;
             }
 
+            .hero {
+                min-height: 100svh;
+                padding: 6.5rem 0 4rem;
+            }
+
+            .hero-content {
+                padding: 0 1rem;
+            }
+
             .hero h1 {
-                font-size: 3rem;
+                font-size: clamp(2.75rem, 14vw, 4.5rem);
+                line-height: 1.05;
+            }
+
+            .hero .tagline {
+                font-size: clamp(1rem, 4.5vw, 1.3rem);
+                line-height: 1.5;
+                letter-spacing: 1px;
+            }
+
+            .hero .intro {
+                font-size: 1rem;
+                line-height: 1.7;
+                margin-bottom: 2rem;
             }
 
             .section {
-                padding: 4rem 0;
+                padding: 4.5rem 0;
             }
 
             .container {
                 padding: 0 1rem;
+            }
+
+            .section-title {
+                margin-bottom: 2rem;
+                line-height: 1.2;
             }
 
             .contact-content {
@@ -1060,10 +1150,28 @@
             .cta-buttons {
                 flex-direction: column;
                 align-items: center;
+                gap: 0.75rem;
+            }
+
+            .cta-buttons .btn {
+                width: min(100%, 19rem);
+                justify-content: center;
             }
 
             .skills-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .skill-item {
+                display: grid;
+                grid-template-columns: minmax(0, 1fr) auto;
+                gap: 0.5rem;
+            }
+
+            .skill-level {
+                grid-column: 1 / -1;
+                width: 100%;
+                margin: 0.1rem 0 0.5rem;
             }
 
             .projects-grid {
@@ -1077,6 +1185,10 @@
             .floating-resume {
                 bottom: 1rem;
                 right: 1rem;
+            }
+
+            .contact-form {
+                padding: 1.25rem;
             }
 
             .social-links {
@@ -1099,20 +1211,12 @@
         }
 
         @media (max-width: 480px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .hero .tagline {
-                font-size: 1.1rem;
-            }
-
             .section-title {
-                font-size: 2rem;
+                font-size: clamp(1.8rem, 9vw, 2.4rem);
             }
 
-            .nav-container {
-                padding: 1rem;
+            .about-text {
+                font-size: 1.05rem;
             }
 
             .projects-grid,
@@ -1123,6 +1227,34 @@
             .project-card,
             .blog-card {
                 padding: 1.5rem;
+            }
+
+            .project-title,
+            .blog-title {
+                font-size: 1.15rem;
+                line-height: 1.4;
+            }
+
+            .project-links {
+                flex-wrap: wrap;
+                gap: 0.75rem;
+            }
+
+            .floating-resume {
+                bottom: 0.75rem;
+                right: 0.75rem;
+            }
+
+            .floating-resume .btn {
+                padding: 0.75rem 1rem;
+                font-size: 0.72rem;
+                letter-spacing: 0.5px;
+            }
+
+            .footer p {
+                padding: 0 1rem;
+                font-size: 0.75rem;
+                line-height: 1.6;
             }
         }
     </style>
@@ -1170,11 +1302,11 @@
                 <li><a href="#blog">Blog</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
-            <div class="mobile-menu">
+            <button class="mobile-menu" type="button" aria-label="Toggle navigation" aria-expanded="false">
                 <span></span>
                 <span></span>
                 <span></span>
-            </div>
+            </button>
         </div>
     </nav>
 
@@ -1673,8 +1805,17 @@
         const navLinks = document.querySelector('.nav-links');
         
         mobileMenu.addEventListener('click', () => {
-            navLinks.classList.toggle('active');
-            mobileMenu.classList.toggle('active');
+            const isOpen = navLinks.classList.toggle('active');
+            mobileMenu.classList.toggle('active', isOpen);
+            mobileMenu.setAttribute('aria-expanded', isOpen);
+        });
+
+        navLinks.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                mobileMenu.classList.remove('active');
+                mobileMenu.setAttribute('aria-expanded', 'false');
+            });
         });
 
         // ===== TYPING ANIMATION FOR HERO SECTION =====
