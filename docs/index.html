@@ -1146,6 +1146,7 @@
                 display: flex;
                 flex-direction: column;
                 gap: 2rem;
+                align-items: stretch;
             }
 
             .contact-info {
@@ -1158,6 +1159,10 @@
 
             .contact-form {
                 order: 2;
+                width: 100%;
+                max-width: 100%;
+                min-width: 0;
+                padding: 1.25rem;
             }
 
             .contact-details {
@@ -1205,7 +1210,13 @@
             }
 
             .contact-form {
-                padding: 1.25rem;
+                padding: 1rem;
+                border-radius: 14px;
+            }
+
+            .contact-form .btn {
+                width: 100%;
+                justify-content: center;
             }
 
             .social-links {
@@ -1244,6 +1255,21 @@
             .project-card,
             .blog-card {
                 padding: 1.5rem;
+            }
+
+            .contact-form {
+                padding: 0.9rem;
+            }
+
+            .form-group {
+                margin-bottom: 1.1rem;
+            }
+
+            .form-group input,
+            .form-group textarea {
+                min-width: 0;
+                font-size: 16px;
+                padding: 0.85rem;
             }
 
             .project-title,
