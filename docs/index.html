@@ -927,8 +927,9 @@
 
         /* ===== FLOATING RESUME BUTTON ===== */
         .floating-resume {
+            --resume-default-bottom: 2rem;
             position: fixed;
-            bottom: 2rem;
+            bottom: var(--resume-default-bottom);
             right: 2rem;
             z-index: 999;
             animation: floatButton 3s ease-in-out infinite;
@@ -936,7 +937,7 @@
         }
 
         .floating-resume.footer-visible {
-            bottom: calc(var(--footer-offset, 0px) + 1rem);
+            bottom: var(--footer-lift, var(--resume-default-bottom));
         }
 
         .floating-resume .btn {
@@ -1210,7 +1211,7 @@
             }
 
             .floating-resume {
-                bottom: 1rem;
+                --resume-default-bottom: 1rem;
                 right: 1rem;
             }
 
@@ -1289,7 +1290,7 @@
             }
 
             .floating-resume {
-                bottom: 0.75rem;
+                --resume-default-bottom: 0.75rem;
                 right: 0.75rem;
             }
 
@@ -1980,20 +1981,39 @@
 
         if (floatingResume && footer) {
             const updateResumeOffset = () => {
-                const footerHeight = footer.getBoundingClientRect().height;
-                floatingResume.style.setProperty('--footer-offset', `${footerHeight}px`);
+                const footerText = footer.querySelector('p');
+                if (!footerText) return;
+
+                const footerTextTop = footerText.getBoundingClientRect().top;
+                const defaultBottomValue = getComputedStyle(floatingResume)
+                    .getPropertyValue('--resume-default-bottom')
+                    .trim();
+                const rootFontSize = parseFloat(
+                    getComputedStyle(document.documentElement).fontSize
+                );
+                const defaultBottom = defaultBottomValue.endsWith('rem')
+                    ? parseFloat(defaultBottomValue) * rootFontSize
+                    : parseFloat(defaultBottomValue);
+                const gap = 8;
+                const requiredBottom = Math.max(
+                    defaultBottom,
+                    window.innerHeight - footerTextTop + gap
+                );
+
+                floatingResume.style.setProperty('--footer-lift', `${requiredBottom}px`);
             };
 
             const footerObserver = new IntersectionObserver(([entry]) => {
                 if (entry.isIntersecting) {
-                    updateResumeOffset();
                     floatingResume.classList.add('footer-visible');
+                    updateResumeOffset();
                 } else {
                     floatingResume.classList.remove('footer-visible');
                 }
             });
 
             footerObserver.observe(footer);
+            window.addEventListener('scroll', debounce(updateResumeOffset, 10));
             window.addEventListener('resize', debounce(updateResumeOffset, 250));
         }
 
