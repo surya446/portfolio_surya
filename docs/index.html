@@ -444,6 +444,21 @@
             z-index: 2;
         }
 
+        .hero-portrait {
+            position: absolute;
+            top: 50%;
+            right: 2%;
+            width: clamp(300px, 23vw, 360px);
+            height: clamp(300px, 23vw, 360px);
+            transform: translateY(-50%);
+            object-fit: cover;
+            border: 4px solid var(--accent-blue);
+            border-radius: 50%;
+            box-shadow: 0 0 0 6px rgba(124, 58, 237, 0.18),
+                        0 0 32px var(--glow-blue);
+            z-index: 1;
+        }
+
         .hero h1 {
             font-family: 'Orbitron', monospace;
             font-size: clamp(3rem, 8vw, 6rem);
@@ -1147,6 +1162,15 @@
                 padding: 0 1rem;
             }
 
+            .hero-portrait {
+                width: 160px;
+                height: 160px;
+                right: 1rem;
+                top: auto;
+                bottom: 1.5rem;
+                transform: none;
+            }
+
             .hero h1 {
                 font-size: clamp(2.75rem, 14vw, 4.5rem);
                 line-height: 1.05;
@@ -1401,6 +1425,7 @@
                 <a href="#contact" class="btn btn-secondary">Get In Touch</a>
             </div>
         </div>
+        <img class="hero-portrait" src="public/portrait-surya.png" alt="Portrait of Surya">
     </section>
 
     <!-- About Section -->
