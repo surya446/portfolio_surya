@@ -440,16 +440,16 @@
             max-width: 800px;
             padding: 0 2rem;
             animation: fadeInUp 1s ease;
-            position: relative;
-            z-index: 2;
+            position: static;
         }
 
         .hero-portrait {
             position: absolute;
             top: 50%;
             right: 1.5%;
-            width: clamp(260px, 23vw, 340px);
-            height: clamp(260px, 23vw, 340px);
+            width: clamp(180px, 18vw, 300px);
+            height: clamp(180px, 18vw, 300px);
+            display: block;
             transform: translateY(-50%);
             object-fit: cover;
             border: 4px solid var(--accent-blue);
@@ -471,9 +471,16 @@
                 bottom: auto;
                 width: clamp(180px, 28vw, 260px);
                 height: clamp(180px, 28vw, 260px);
-                margin: 1.5rem auto 5.5rem;
+                margin: 1.5rem auto;
                 transform: none;
                 flex: none;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .hero-content {
+                width: 100%;
+                max-width: 1200px;
             }
         }
 
@@ -1186,7 +1193,7 @@
                 right: auto;
                 top: auto;
                 bottom: auto;
-                margin: 1.25rem auto 5.5rem;
+                margin: 1.25rem auto 1.5rem;
                 transform: none;
             }
 
@@ -1436,6 +1443,7 @@
         <div class="hero-content">
             <h1>SURYA</h1>
             <p class="tagline">SOFTWARE DEVELOPER | ECE GRADUATE</p>
+            <img class="hero-portrait" src="public/portrait-surya.png" alt="Portrait of Surya">
             <p class="intro">
                 Software Developer focused on building modern, scalable, and user-focused applications. I work across frontend, backend, databases, and APIs to turn ideas into reliable software solutions. Passionate about solving real-world problems through technology and building products that create meaningful impact.
             </p>
@@ -1444,7 +1452,6 @@
                 <a href="#contact" class="btn btn-secondary">Get In Touch</a>
             </div>
         </div>
-        <img class="hero-portrait" src="public/portrait-surya.png" alt="Portrait of Surya">
     </section>
 
     <!-- About Section -->
