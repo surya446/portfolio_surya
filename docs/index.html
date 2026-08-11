@@ -447,9 +447,9 @@
         .hero-portrait {
             position: absolute;
             top: 50%;
-            right: 2%;
-            width: clamp(300px, 23vw, 360px);
-            height: clamp(300px, 23vw, 360px);
+            right: 1.5%;
+            width: clamp(260px, 23vw, 340px);
+            height: clamp(260px, 23vw, 340px);
             transform: translateY(-50%);
             object-fit: cover;
             border: 4px solid var(--accent-blue);
@@ -457,6 +457,24 @@
             box-shadow: 0 0 0 6px rgba(124, 58, 237, 0.18),
                         0 0 32px var(--glow-blue);
             z-index: 1;
+        }
+
+        @media (max-width: 1199px) {
+            .hero {
+                flex-direction: column;
+            }
+
+            .hero-portrait {
+                position: relative;
+                top: auto;
+                right: auto;
+                bottom: auto;
+                width: clamp(180px, 28vw, 260px);
+                height: clamp(180px, 28vw, 260px);
+                margin: 1.5rem auto 5.5rem;
+                transform: none;
+                flex: none;
+            }
         }
 
         .hero h1 {
@@ -1165,9 +1183,10 @@
             .hero-portrait {
                 width: 160px;
                 height: 160px;
-                right: 1rem;
+                right: auto;
                 top: auto;
-                bottom: 1.5rem;
+                bottom: auto;
+                margin: 1.25rem auto 5.5rem;
                 transform: none;
             }
 
