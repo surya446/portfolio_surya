@@ -985,7 +985,16 @@
             right: 2rem;
             z-index: 999;
             animation: floatButton 3s ease-in-out infinite;
-            transition: bottom 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.3s ease, visibility 0.3s ease, bottom 0.3s ease;
+        }
+
+        .floating-resume.is-visible {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
         }
 
         .floating-resume.footer-visible {
@@ -2072,6 +2081,13 @@
 
         const floatingResume = document.querySelector('.floating-resume');
         const footer = document.querySelector('.footer');
+
+        const updateResumeVisibility = () => {
+            floatingResume.classList.toggle('is-visible', window.scrollY > 100);
+        };
+
+        updateResumeVisibility();
+        window.addEventListener('scroll', updateResumeVisibility, { passive: true });
 
         if (floatingResume && footer) {
             const updateResumeOffset = () => {
