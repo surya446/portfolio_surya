@@ -1,0 +1,36 @@
+Fix the sudden image movement that happens when my portfolio website initially loads.
+
+Problem:
+
+* When the website first opens, the profile/hero image appears in one position and then suddenly shifts/moves to another position after the page finishes loading.
+* This creates a noticeable layout shift and makes the website feel unpolished.
+* I want the image to appear in its FINAL position from the very beginning, with no sudden jump, repositioning, or flicker.
+
+Requirements:
+
+1. Inspect the existing code and identify the exact cause of the image position shift.
+2. Do NOT redesign the website.
+3. Do NOT change the existing dimensions, spacing, typography, colors, animations, sections, or overall layout.
+4. Do NOT change the image itself.
+5. Preserve the current final position, size, aspect ratio, and styling of the image.
+6. Reserve the image's required width and height before the image loads so the browser does not recalculate the layout afterward.
+7. Check for causes such as:
+
+   * Missing image width/height or aspect-ratio
+   * CSS being applied only after JavaScript loads
+   * JavaScript calculating the image position after initial render
+   * Framer Motion/GSAP or other entrance animations affecting the position
+   * CSS transitions unintentionally animating position
+   * Font loading causing the surrounding layout to change
+   * Images loading without a reserved container
+   * Hydration/rendering differences if applicable
+8. If an animation is causing the initial jump, keep the intended animation only if it does not cause the image to start from the wrong position. The image should start directly at its final layout position.
+9. Avoid using arbitrary delays, setTimeout hacks, or hiding the image until everything loads. Fix the underlying layout-shift problem instead.
+10. Make the smallest possible code change necessary.
+11. Check both desktop and mobile responsive layouts so fixing the desktop position does not break mobile.
+12. After making the change, verify that refreshing the page repeatedly produces no visible image jump.
+
+Important:
+The current website design is already correct. I only want the initial image position/layout shift fixed. Do not make any other visual changes.
+
+Before editing, inspect the relevant component and CSS to determine why the position changes. Then make the targeted fix and explain exactly which file/code caused the shift and what you changed.

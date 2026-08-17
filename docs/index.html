@@ -439,7 +439,7 @@
         .hero-content {
             max-width: 800px;
             padding: 0 2rem;
-            animation: fadeInUp 1s ease;
+            animation: heroFadeIn 1s ease;
             position: static;
         }
 
@@ -449,6 +449,7 @@
             right: 1.5%;
             width: clamp(180px, 18vw, 300px);
             height: clamp(180px, 18vw, 300px);
+            aspect-ratio: 1 / 1;
             display: block;
             transform: translateY(-50%);
             object-fit: cover;
@@ -1076,6 +1077,15 @@
         }
 
         /* ===== ANIMATIONS ===== */
+        @keyframes heroFadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
         @keyframes fadeInUp {
             from {
                 opacity: 0;
@@ -1443,7 +1453,7 @@
         <div class="hero-content">
             <h1>SURYA</h1>
             <p class="tagline">SOFTWARE DEVELOPER | ECE GRADUATE</p>
-            <img class="hero-portrait" src="public/portrait-surya.png" alt="Portrait of Surya">
+            <img class="hero-portrait" src="public/portrait-surya.png" width="300" height="300" alt="Portrait of Surya">
             <p class="intro">
                 Software Developer focused on building modern, scalable, and user-focused applications. I work across frontend, backend, databases, and APIs to turn ideas into reliable software solutions. Passionate about solving real-world problems through technology and building products that create meaningful impact.
             </p>
@@ -1956,6 +1966,8 @@
         
         function typeWriter(element, text, speed = 100) {
             let i = 0;
+            const reservedHeight = `${element.getBoundingClientRect().height}px`;
+            element.style.minHeight = reservedHeight;
             element.innerHTML = '';
             
             function type() {
@@ -1963,6 +1975,8 @@
                     element.innerHTML += text.charAt(i);
                     i++;
                     setTimeout(type, speed);
+                } else {
+                    element.style.minHeight = '';
                 }
             }
             
